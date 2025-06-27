@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TbCampaigns extends Model
 {
+
+    protected $table = 'tb_campaigns';
     //
      protected $fillable = [
         'img',

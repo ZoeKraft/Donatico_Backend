@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tb_campaigns', function (Blueprint $table) {
+        Schema::create('tb_type', function (Blueprint $table) {
             $table->id();
-            $table->string('img',50);
-            $table->string('name',30);
-            $table->string('description',150);
-            $table->string('location',30);
-            $table->string('category',15);
-            $table->string('type',30);
-            $table->decimal('amount',20,2);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_campaigns');
+        Schema::dropIfExists('tb_type');
     }
 };

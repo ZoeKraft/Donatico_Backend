@@ -44,11 +44,10 @@ class DonaticoController extends Controller
             'name' => $name,
             'description' => $description,
             'location' => $location,
-            'category' => $category,
-            'type' => $type,
-            'amount' => $amount,
+            'categories_id' => $category,
+            'types_id' => $type,
+            'amount' => $amount
         ]);
-
 
     }
 
