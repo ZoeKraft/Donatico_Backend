@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class TbCategories extends Model
 {
-      protected $table = 'tb_categories';
-    //
+    protected $table = 'tb_categories';
+
+
     protected $fillable = ['name'];
 
 
     public function campaigns()
     {
-        return $this->hasMany(Product::class, 'category_id');
+        return $this->hasMany(TbCampaigns::class,  'categories_id');
     }
 }
