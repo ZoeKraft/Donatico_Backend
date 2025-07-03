@@ -8,6 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::get('/login', function () {
     return 'Login';
 })->name('login');
@@ -27,3 +28,4 @@ Route::get('/register', [RegisterController::class, 'create'])->name('register.f
 Route::get('/users', [RegisterController::class, 'index'])->name('users.index');
 Route::resource('users', RegisterController::class);
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
