@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TbCampaigns;
+use App\Models\TbCategories;
+use App\Models\TbTypes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +26,10 @@ class DonaticoController extends Controller
      */
     public function create()
     {
-        //
+        $categories = TbCategories::all();
+        $types = TbTypes::all();
+
+        return view('donations.create', compact('categories', 'types'));
     }
 
     /**
@@ -32,14 +37,13 @@ class DonaticoController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096',
             'name' => 'required|unique:tb_campaigns,name',
             'description' => 'required',
             'location' => 'required',
-            'category' => 'required|exists:tb_categories,id',
-            'type' => 'required|exists:tb_types,id',
+            'categories_id' => 'required|exists:tb_categories,id',
+            'types_id' => 'required|exists:tb_types,id',
             'amount' => 'required|numeric|min:0',
         ]);
 
@@ -50,54 +54,44 @@ class DonaticoController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'location' => $request->location,
-            'categories_id' => $request->category,
-            'types_id' => $request->type,
+            'categories_id' => $request->categories_id,
+            'types_id' => $request->types_id,
             'amount' => $request->amount
 
         ]);
 
-        return response()->json($campaign);
+        return redirect()->route('campaign.show')->with('success', 'Campaign created successfully');
+        
+        //return response()->json($campaign);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($img, $name, $description, $location, $category, $type, $amount)
+    public function show()
     {
-        //
-        $campaigns = new TbCampaigns();
-        $campaigns::create([
-            'img' => $img,
-            'name' => $name,
-            'description' => $description,
-            'location' => $location,
-            'categories_id' => $category,
-            'types_id' => $type,
-            'amount' => $amount
-        ]);
+        $donation = TbCampaigns::with('categories', 'types')->get(); // Get all donations
+        return view('donations.show', compact('donation'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TbCampaigns $campaigns)
+
+
+    public function edit(TbCampaigns $donation)
     {
-        $campaigns->load(['categories', 'types']);
+        $donation->load(['categories', 'types']);
 
-        // $category = TbCategories::all();
-        // $types = TbTypes::all(); maybe not needed
+        $categories = TbCategories::all();
+        $types = TbTypes::all();
 
-        return response()->json($campaigns);
+        return view('donations.edit', compact('donation', 'categories', 'types'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TbCampaigns $campaign)
+
+
+
+
+    public function update(Request $request, TbCampaigns $donation)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096',
-            'name' => 'required|unique:tb_campaigns,name,' . $campaign->id,
+            'img' => 'nullable|image|max:4096',
+            'name' => 'required|unique:tb_campaigns,name,'. $donation->id,
             'description' => 'required',
             'location' => 'required',
             'category' => 'required|exists:tb_categories,id',
@@ -105,36 +99,36 @@ class DonaticoController extends Controller
             'amount' => 'required|numeric|min:0',
         ]);
 
-        $imagePath = null;
+         $imagePath = null;
         if ($request->hasFile('image')) {
-            try {
-                // Delete old image if it exists
-                if ($campaign->image && Storage::disk('public')->exists($campaign->image)) {
-                    Storage::disk('public')->delete($campaign->image);
-                }
+             try {
+                 // Delete old image if it exists
+                 if ($donation->image && Storage::disk('public')->exists($donation->image)) {
+                     Storage::disk('public')->delete($donation->image);
+                 }
 
-                // Store new image
-                $imagePath = $request->file('image')->store('products', 'public');
+                 // Store new image
+                $imagePath = $request->file('image')->store('campaigns', 'public');
 
-                if (!$imagePath) {
-                    throw new \Exception('Failed to store new image');
-                }
-            } catch (\Exception $e) {
-                // Log the error but don't stop the update process
-                Log::error('Error handling product image update: ' . $e->getMessage(), [
-                    'campaign_id' => $campaign->id,
-                    'original_image' => $campaign->image
+                 if (!$imagePath) {
+                     throw new \Exception('Failed to store new image');
+                 }
+             } catch (\Exception $e) {
+                 // Log the error but don't stop the update process
+                 Log::error('Error handling product image update: ' . $e->getMessage(), [
+                     'campaign_id' => $donation->id,
+                    'original_image' => $donation->img
                 ]);
 
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Failed to update product image. Please try again.');
-            }
+                 return redirect()
+                     ->back()
+                     ->withInput()
+                     ->with('error', 'Failed to update product image. Please try again.');
+             }
         }
 
-        $campaign->update([
-            'img' => $request->hasFile('image') ? $imagePath : $campaign->image,
+        $donation->update([
+            'img' => $request->hasFile('image') ? $imagePath : $donation->img, // Use new image if provided, otherwise keep old one
             'name' => $request->name,
             'description' => $request->description,
             'location' => $request->location,
@@ -144,19 +138,30 @@ class DonaticoController extends Controller
 
         ]);
 
-        return response()->json($campaign);
+
+        return redirect()->route('campaign.show')->with('success', 'Campaign updated successfully');
+
+        //return response()->json($campaign);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+
+
+
+
+
+
+
+
+    public function destroy($id)
     {
-        //
+        $donation = TbCampaigns::findOrFail($id);
+        $donation->delete();
+
+        return redirect()->back()->with('success', 'Campaign deleted successfully');
     }
 
 
-    
+
     //API methods
     public function all()
     {
