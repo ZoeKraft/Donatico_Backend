@@ -1,23 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DonaticoController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/campaign/{img}/{name}/{description}/{location}/{category}/{type}/{amount}', [DonaticoController::class, 'show']);
+Route::get('/login', function () {
+    return 'Login page (en construcción)';
+})->name('login');
 
 
-Route::get('/categories/{name}', [DonaticoController::class, 'show']);
+//donatico
+Route::get('/campaign/list', [DonaticoController::class, 'show'])->name('campaign.show');
+Route::post('/campaign', [DonaticoController::class, 'store'])->name('campaign.store');
+Route::get('/campaign/create', [DonaticoController::class, 'create'])->name('campaign.create');
+Route::get('/{donation}/edit', [DonaticoController::class, 'edit'])->name('campaign.edit');
+Route::put('/{donation}', [DonaticoController::class, 'update'])->name('campaign.update');
+Route::delete('/campaign/delete/{donation}', [DonaticoController::class, 'destroy'])->name('campaign.destroy');
 
 
-Route::get('/types/{name}', [DonaticoController::class, 'show']);
-
-Route::get('/notifications/{name}/{description}', [DonaticoController::class, 'show']);
-
-Route::get('/profile/{img}', [DonaticoController::class, 'show']);
-
-Route::get('/details/{campaign}/{user}', [DonaticoController::class, 'show']);
-
+//register
+Route::get('/register', [RegisterController::class, 'create'])->name('register.form');
+Route::get('/users', [RegisterController::class, 'index'])->name('users.index');
+Route::resource('users', RegisterController::class);
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
