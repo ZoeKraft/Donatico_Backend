@@ -9,7 +9,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', function () {
-    return 'Login page (en construcción)';
+    return 'Login';
 })->name('login');
 
 
