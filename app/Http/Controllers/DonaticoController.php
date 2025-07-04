@@ -61,7 +61,7 @@ class DonaticoController extends Controller
         ]);
 
         return redirect()->route('campaign.show')->with('success', 'Campaign created successfully');
-        
+
         //return response()->json($campaign);
     }
 
@@ -166,7 +166,6 @@ class DonaticoController extends Controller
     public function all()
     {
         $donations = TbCampaigns::with(['categories', 'types'])->get();
-
         return response()->json($donations);
     }
 }

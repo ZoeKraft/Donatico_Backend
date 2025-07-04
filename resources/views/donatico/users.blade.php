@@ -36,12 +36,12 @@
                 <td class="border border-gray-400 px-4 py-2">{{ $user->phone }}</td>
                 <td class="border border-gray-400 px-4 py-2">{{ $user->address }}</td>
                 <td class="border border-gray-400 px-4 py-2 text-center space-x-2">
-                    <a href="{{ route('users.edit', $user->id) }}" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-white font-semibold">Editar</a>
+                    <a href="{{ route('users.edit', $user->id) }}" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded shadow-md shadow-gray-500 text-white font-semibold">Editar</a>
 
                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white font-semibold">Eliminar</button>
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 shadow-md shadow-gray-500 px-3 py-1 rounded text-white font-semibold">Eliminar</button>
                     </form>
                 </td>
             </tr>
@@ -53,8 +53,12 @@
         </tbody>
     </table>
 
-    <div class="mt-6">
-        <a href="{{ route('register.form') }}" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-bold text-white">Registrar Nuevo Usuario</a>
+    <div class="my-6">
+        <a href="{{ route('register.form') }}" class="bg-green-600 hover:bg-green-800 shadow-xl shadow-gray-800 hover:shadow-sm duration-300 px-6 py-2 rounded font-bold text-white">Registrar Nuevo Usuario</a>
+    </div>
+
+    <div class="mt-16">
+        <a href="{{ route('campaign.show') }}" class="bg-sky-600 hover:bg-sky-800 px-6 py-2 shadow-xl shadow-gray-800 hover:shadow-sm duration-300 rounded font-bold text-white"> Lista de donaciones</a>
     </div>
 
 </body>
