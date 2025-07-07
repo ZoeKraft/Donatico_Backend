@@ -38,13 +38,13 @@
 
                 <div class="w-full bg-gray-200 rounded-full h-3 mt-4 overflow-hidden">
                     <div
-                        class="bg-green-600 h-3 transition-all duration-500 ease-in-out">
-                        `
+                        class="bg-gray-200 h-3 transition-all duration-500 ease-in-out">
+                        
                     </div>
                 </div>
 
                 <p class="text-sm text-right text-green-900 mt-1">
-                    {props.progress}% funded
+                    0 % funded
                 </p>
 
                 <p class="text-xs text-center mt-2 text-gray-700">
@@ -73,7 +73,7 @@
         </section>
         <div class="flex w-full justify-center items-center mt-10">
             <a href="{{ route('campaign.create') }}"
-                class="bg-green-600 hover:bg-green-900 duration-500 text-white shadow-lg shadow-gray-600 hover:shadow-sm  font-bold py-2 px-4 rounded-full text-sm">
+                class="bg-green-600 hover:bg-green-900 duration-500 text-white shadow-lg shadow-gray-600 hover:shadow-sm  font-bold py-2 px- rounded-full text-lg">
                 Create New Donation
             </a>
         </div>

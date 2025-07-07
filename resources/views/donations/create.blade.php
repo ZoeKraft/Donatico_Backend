@@ -22,7 +22,7 @@
             </div>
 
 
-            <form action="{{ route('campaign.store') }}" class="flex flex-col gap-1 w-3/4 min-md:gap-3 min-md:text-3xl min-md:w-2/3" method="POST" enctype="multipart/form-data" >
+            <form action="{{ route('campaign.store') }}" class="flex flex-col gap-1 w-3/4 min-md:gap-3 min-md:text-3xl min-md:w-2/3" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <label class="font-semibold relative left-1/6 min-md:font-medium">Image</label>
@@ -54,7 +54,7 @@
                 <select value='selected Type' name="types_id" class="mb-8 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600 hover:scale-105 duration-300">
                     <option value="" disabled>Select Type</option>
                     @foreach ($types as $type)
-                    <option key=types  required value='{{$type->id}}' {{ (old('type')) == $type->id ? 'selected' : '' }}>
+                    <option key=types required value='{{$type->id}}' {{ (old('type')) == $type->id ? 'selected' : '' }}>
                         {{$type->name}}
                     </option>
                     @endforeach
@@ -81,11 +81,12 @@
             const file = fileInput.files[0];
             const fileName = file.name;
 
+
+            
             const previewImage = document.getElementById('previewImage');
             previewImage.textContent = fileName;
-            imageNameElement.textContent = fileName;
-
-            previewImage.parentNode.appendChild(imageNameElement);
+            
+            previewImage.parentNode.appendChild(imageNameElement, previewImage);
         });
     </script>
 </body>
